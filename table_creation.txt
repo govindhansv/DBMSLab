@@ -1,0 +1,78 @@
+SHOW DATABASES;
+SHOW TABLES;
+
+
+There’s a circular reference between Department (ManagerID → Employee) and Employee (Dnumber → Department).
+To handle this:
+
+Create Employee first without the FOREIGN KEY (Dnumber) reference.
+
+Create Department.
+
+Alter Employee to add the Dnumber foreign key.
+
+Alter Department to add the ManagerID foreign key.
+
+
+CREATE TABLE Employee (
+    Name VARCHAR(50) NOT NULL,
+    EmployeeID INT PRIMARY KEY,
+    BirthDate DATE,
+    HouseName VARCHAR(100),
+    Gender ENUM('M', 'F', 'Other'),
+    Salary DECIMAL(10,2) CHECK (Salary >= 5000 AND Salary <= 25000),
+    SuperEID INT,
+    Dnumber INT,
+    FOREIGN KEY (SuperEID) REFERENCES Employee(EmployeeID),
+    FOREIGN KEY (Dnumber) REFERENCES Department(Dnumber)
+);
+
+CREATE TABLE Department (
+    Dname VARCHAR(50) NOT NULL UNIQUE,
+    Dnumber INT PRIMARY KEY,
+    ManagerID INT,
+    Mgr_start_date DATE NOT NULL,
+    FOREIGN KEY (ManagerID) REFERENCES Employee(EmployeeID)
+);
+
+ALTER TABLE Department
+ADD CONSTRAINT fk_department_managerid
+FOREIGN KEY (ManagerID) REFERENCES Employee(EmployeeID);
+
+ALTER TABLE Employee
+ADD CONSTRAINT fk_employee_dnumber
+FOREIGN KEY (Dnumber) REFERENCES Department(Dnumber);
+
+
+CREATE TABLE DeptLocations (
+    Dnumber INT,
+    Dlocation VARCHAR(50),
+    PRIMARY KEY (Dnumber, Dlocation),
+    FOREIGN KEY (Dnumber) REFERENCES Department(Dnumber)
+);
+
+CREATE TABLE Project (
+    Pname VARCHAR(50) NOT NULL,
+    Pnumber INT PRIMARY KEY,
+    Plocation VARCHAR(50),
+    Dnumber INT NOT NULL,
+    FOREIGN KEY (Dnumber) REFERENCES Department(Dnumber)
+);
+
+CREATE TABLE Works_on (
+    EmployeeID INT,
+    Pnumber INT,
+    Hours DECIMAL(5,2) NOT NULL,
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID),
+    FOREIGN KEY (Pnumber) REFERENCES Project(Pnumber)
+);
+
+CREATE TABLE Dependent (
+    EmployeeID INT,
+    DependName VARCHAR(50) NOT NULL,
+    Sex ENUM('M', 'F', 'Other'),
+    BirthDate DATE,
+    Relationship VARCHAR(50),
+    PRIMARY KEY (EmployeeID, DependName),
+    FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID)
+);
