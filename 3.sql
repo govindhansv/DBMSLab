@@ -65,5 +65,34 @@ mysql>
 4. For every project located in “Cochin”, list the project number, the controlling department no and  
   the department manager’s name, Housename and birth date. 
 
+SELECT 
+    p.Pnumber,
+    p.Dnumber AS ControllingDeptNo,
+    e.Name AS ManagerName,
+    e.HouseName,
+    e.BirthDate
+FROM Project p
+JOIN Department d ON p.Dnumber = d.Dnumber
+JOIN Employee e ON d.ManagerID = e.EmployeeID
+WHERE p.Plocation = 'Kochi';
+
++---------+-------------------+-------------+--------------+------------+
+| Pnumber | ControllingDeptNo | ManagerName | HouseName    | BirthDate  |
++---------+-------------------+-------------+--------------+------------+
+|       1 |                 2 | Charlie     | Blue Cottage | 1988-12-02 |
++---------+-------------------+-------------+--------------+------------+
+1 row in set (0.00 sec)
+
   
 5. List the employees who work in more than one project.
+
+SELECT e.Name,e.EmployeeID,COUNT(w.Pnumber) AS Numberofprojects 
+FROM Employee e JOIN Works_on w ON e.EmployeeID = w.EmployeeID 
+GROUP BY e.Name,e.EmployeeID HAVING COUNT(w.Pnumber) > 1;
+
++-------+------------+------------------+
+| Name  | EmployeeID | Numberofprojects |
++-------+------------+------------------+
+| Diana |        104 |                2 |
++-------+------------+------------------+
+1 row in set (0.00 sec)
