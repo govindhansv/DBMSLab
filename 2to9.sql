@@ -155,3 +155,5 @@ mysql> INSERT INTO Project (Pname, Pnumber, Plocation, Dnumber) VALUES
     -> ('Banking App', 3, 'Kozhikode', 3);
 Query OK, 3 rows affected (0.00 sec)
 Records: 3  Duplicates: 0  Warnings: 0
+
+
