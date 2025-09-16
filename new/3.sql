@@ -1,12 +1,6 @@
--- Retrieving data using select Commands 
- 
-1. List the records in the Employee table order by salary in ascending/descending order. 
-
-mysql> SELECT *
-    -> FROM Employee
-    -> ORDER BY Salary ASC;
+mysql> select * from employee order by salary asc;
 +---------+------------+------------+--------------+--------+----------+----------+---------+
-| Name    | EmployeeID | BirthDate  | HouseName    | Gender | Salary   | SuperEID | Dnumber |
+| name    | employeeid | birthdate  | housename    | gender | salary   | supereid | dnumber |
 +---------+------------+------------+--------------+--------+----------+----------+---------+
 | Frank   |        106 | 1995-11-30 | Sunrise Home | M      |  8000.00 |      105 |       3 |
 | Alice   |        101 | 1985-04-12 | Rose Villa   | F      | 15000.00 |     NULL |       1 |
@@ -17,11 +11,9 @@ mysql> SELECT *
 +---------+------------+------------+--------------+--------+----------+----------+---------+
 6 rows in set (0.00 sec)
 
-mysql> SELECT *
-    -> FROM Employee
-    -> ORDER BY Salary DESC;
+mysql> select * from employee order by salary desc;
 +---------+------------+------------+--------------+--------+----------+----------+---------+
-| Name    | EmployeeID | BirthDate  | HouseName    | Gender | Salary   | SuperEID | Dnumber |
+| name    | employeeid | birthdate  | housename    | gender | salary   | supereid | dnumber |
 +---------+------------+------------+--------------+--------+----------+----------+---------+
 | Alice   |        101 | 1985-04-12 | Rose Villa   | F      | 15000.00 |     NULL |       1 |
 | Bob     |        102 | 1990-09-21 | Green House  | M      | 15000.00 |      101 |       1 |
@@ -35,12 +27,9 @@ mysql> SELECT *
 mysql>
 
 
-
-2. Display only those Employees whose Dnumber is 30. 
-
-mysql> SELECT * FROM EMPLOYEE WHERE DNUMBER = 3;
+mysql> select * from employee where dnumber = 3;
 +-------+------------+------------+--------------+--------+----------+----------+---------+
-| Name  | EmployeeID | BirthDate  | HouseName    | Gender | Salary   | SuperEID | Dnumber |
+| name  | employeeid | birthdate  | housename    | gender | salary   | supereid | dnumber |
 +-------+------------+------------+--------------+--------+----------+----------+---------+
 | Eve   |        105 | 1983-03-05 | Hill Top     | F      | 15000.00 |      101 |       3 |
 | Frank |        106 | 1995-11-30 | Sunrise Home | M      |  8000.00 |      105 |       3 |
@@ -49,50 +38,30 @@ mysql> SELECT * FROM EMPLOYEE WHERE DNUMBER = 3;
 
 mysql>
 
-
-3. Retrieve the name and birthdate of Employee working in a particular in a particular  
-  department. 
-
-  mysql> SELECT E.name,e.birthdate from employee e join depARTMENT D on e.Dnumber = D.dnumber where d.dname='HR';
+mysql> select e.name,e.birthdate from employee e join department d on e.dnumber = d.dnumber where d.dname = 'HR';
 +-------+------------+
 | name  | birthdate  |
 +-------+------------+
 | Alice | 1985-04-12 |
 | Bob   | 1990-09-21 |
 +-------+------------+
-2 rows in set (0.02 sec)
+2 rows in set (0.00 sec)
 
-4. For every project located in “Cochin”, list the project number, the controlling department no and  
-  the department manager’s name, Housename and birth date. 
-
-SELECT 
-    p.Pnumber,
-    p.Dnumber AS ControllingDeptNo,
-    e.Name AS ManagerName,
-    e.HouseName,
-    e.BirthDate
-FROM Project p
-JOIN Department d ON p.Dnumber = d.Dnumber
-JOIN Employee e ON d.ManagerID = e.EmployeeID
-WHERE p.Plocation = 'Kochi';
-
-+---------+-------------------+-------------+--------------+------------+
-| Pnumber | ControllingDeptNo | ManagerName | HouseName    | BirthDate  |
-+---------+-------------------+-------------+--------------+------------+
-|       1 |                 2 | Charlie     | Blue Cottage | 1988-12-02 |
-+---------+-------------------+-------------+--------------+------------+
-1 row in set (0.00 sec)
-  
-5. List the employees who work in more than one project.
-
-SELECT e.Name,e.EmployeeID,COUNT(w.Pnumber) AS Numberofprojects 
-FROM Employee e JOIN Works_on w ON e.EmployeeID = w.EmployeeID 
-GROUP BY e.Name,e.EmployeeID HAVING COUNT(w.Pnumber) > 1;
-
-+-------+------------+------------------+
-| Name  | EmployeeID | Numberofprojects |
-+-------+------------+------------------+
-| Diana |        104 |                2 |
-+-------+------------+------------------+
+mysql>
+mysql> select p.pnumber,p.dnumber as controlingdeptno, e.name as managername, e.housename , e.birthdate from project p join department d on p.dnumber = d.dnumber join employee e on d.managerid = e.employeeid where p.plocation = 'Kochi';
++---------+------------------+-------------+--------------+------------+
+| pnumber | controlingdeptno | managername | housename    | birthdate  |
++---------+------------------+-------------+--------------+------------+
+|       1 |                2 | Charlie     | Blue Cottage | 1988-12-02 |
++---------+------------------+-------------+--------------+------------+
 1 row in set (0.00 sec)
 
+mysql> select e.name,e.employeeid,COUNT(w.pnumber) as noofprojects from employee e join works_on w on e.employeeid = w.employeeid group by e.name,e.employeeid having count(w.pnumber) >1 ;
++-------+------------+--------------+
+| name  | employeeid | noofprojects |
++-------+------------+--------------+
+| Diana |        104 |            2 |
++-------+------------+--------------+
+1 row in set (0.00 sec)
+
+mysql>
